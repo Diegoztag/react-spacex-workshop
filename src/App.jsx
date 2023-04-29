@@ -1,33 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import { Heading, Image } from '@chakra-ui/react'
+import { LaunchItem } from './components/LaunchItem'; 
+import * as API from './services/launches';
+import logo from './assets/logo.png'
 
-function App() {
-  const [count, setCount] = useState(0)
+
+export function App() {
+  const [launches, setLaunches] = useState([]);
+
+  useEffect(() => {
+    API.getAllLaunches().then(setLaunches)
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Image
+        m={4}
+        src={logo}
+        width={300}
+        alt="logo" 
+      />
+      <Heading 
+        as="h1" 
+        size="lg"
+        m={4}
+        align="center"
+      >
+        SpaceX Launches
+      </Heading>
+      <section>
+        {launches.map(launch => (
+          <LaunchItem key={launch.flightnumber} {...launch}/>
+        ))}
+      </section>
     </>
   )
 }
